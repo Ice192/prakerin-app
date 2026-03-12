@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import ChartCard from '../components/ChartCard';
 import PageHeader from '../components/PageHeader';
+import SimpleBarChart from '../components/SimpleBarChart';
+import SimpleDonutChart from '../components/SimpleDonutChart';
 import StatCard from '../components/StatCard';
 import { api, extractErrorMessage } from '../services/api';
 
@@ -30,6 +33,8 @@ const DashboardPage = () => {
         return <p className="text-sm text-slate-600">Loading dashboard...</p>;
     }
 
+    const isAdminDashboard = dashboard?.role === 'admin';
+
     return (
         <div>
             <PageHeader
@@ -48,6 +53,24 @@ const DashboardPage = () => {
                     {dashboard.cards.map((item) => (
                         <StatCard key={item.label} label={item.label} value={item.value} />
                     ))}
+                </section>
+            ) : null}
+
+            {isAdminDashboard ? (
+                <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    <ChartCard
+                        title="Internship Overview"
+                        description={`Snapshot as of ${dashboard?.today ?? 'today'}`}
+                    >
+                        <SimpleBarChart data={dashboard?.charts?.internship_overview ?? []} />
+                    </ChartCard>
+
+                    <ChartCard
+                        title="Journal Submission Today"
+                        description="Comparison between submitted and missing journals for active internship students."
+                    >
+                        <SimpleDonutChart data={dashboard?.charts?.journal_today_overview ?? []} />
+                    </ChartCard>
                 </section>
             ) : null}
 

@@ -7,10 +7,10 @@ use App\Models\Evaluation;
 use App\Models\Industry;
 use App\Models\InternshipPlacement;
 use App\Models\Journal;
-use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class DashboardController extends Controller
 {
@@ -73,6 +73,22 @@ class DashboardController extends Controller
      */
     private function adminDashboard(): array
     {
+        $today = now()->toDateString();
+        $activeInternshipStudentIds = InternshipPlacement::query()
+            ->where('status', 'active')
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
+            ->pluck('student_id')
+            ->unique()
+            ->values();
+
+        $totalStudentsInInternship = $activeInternshipStudentIds->count();
+        $studentsSubmittedJournalToday = $this->studentsSubmittedJournalToday(
+            $today,
+            $activeInternshipStudentIds,
+        );
+        $studentsMissingJournalToday = max($totalStudentsInInternship - $studentsSubmittedJournalToday, 0);
+
         $recentPlacements = InternshipPlacement::query()
             ->with(['student.user', 'industry'])
             ->latest()
@@ -82,12 +98,22 @@ class DashboardController extends Controller
         return [
             'role' => User::ROLE_ADMIN,
             'cards' => [
-                ['label' => 'Total Students', 'value' => Student::count()],
+                ['label' => 'Total Students in Internship', 'value' => $totalStudentsInInternship],
                 ['label' => 'Total Industries', 'value' => Industry::count()],
-                ['label' => 'Internship Placements', 'value' => InternshipPlacement::count()],
-                ['label' => 'Pending Journals', 'value' => Journal::where('verification_status', 'pending')->count()],
-                ['label' => 'Total Evaluations', 'value' => Evaluation::count()],
+                ['label' => 'Students Submitted Journal Today', 'value' => $studentsSubmittedJournalToday],
+                ['label' => 'Students Missing Journal Today', 'value' => $studentsMissingJournalToday],
             ],
+            'charts' => [
+                'internship_overview' => [
+                    ['label' => 'Students in Internship', 'value' => $totalStudentsInInternship],
+                    ['label' => 'Total Industries', 'value' => Industry::count()],
+                ],
+                'journal_today_overview' => [
+                    ['label' => 'Submitted Today', 'value' => $studentsSubmittedJournalToday],
+                    ['label' => 'Missing Today', 'value' => $studentsMissingJournalToday],
+                ],
+            ],
+            'today' => $today,
             'recent_placements' => $recentPlacements->map(function (InternshipPlacement $placement): array {
                 return [
                     'id' => $placement->id,
@@ -170,5 +196,18 @@ class DashboardController extends Controller
                 ];
             }),
         ];
+    }
+
+    private function studentsSubmittedJournalToday(string $today, Collection $activeInternshipStudentIds): int
+    {
+        if ($activeInternshipStudentIds->isEmpty()) {
+            return 0;
+        }
+
+        return Journal::query()
+            ->whereDate('date', $today)
+            ->whereIn('student_id', $activeInternshipStudentIds)
+            ->distinct('student_id')
+            ->count('student_id');
     }
 }
