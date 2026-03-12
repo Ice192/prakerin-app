@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\InternshipPlacement;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -28,7 +29,7 @@ class PlacementController extends Controller
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, NotificationService $notificationService): JsonResponse
     {
         if ($response = $this->ensureAdmin($request)) {
             return $response;
@@ -47,6 +48,8 @@ class PlacementController extends Controller
             ...$validated,
             'status' => $validated['status'] ?? 'assigned',
         ])->load(['student.user', 'industry', 'teacher.user']);
+
+        $notificationService->sendPlacementAssignedNotification($placement);
 
         return response()->json([
             'message' => 'Placement created successfully.',

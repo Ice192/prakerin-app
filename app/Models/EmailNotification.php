@@ -15,9 +15,12 @@ class EmailNotification extends Model
      */
     protected $fillable = [
         'user_id',
+        'notification_type',
         'subject',
         'message',
         'sent_status',
+        'sent_at',
+        'error_message',
     ];
 
     /**
@@ -27,6 +30,7 @@ class EmailNotification extends Model
     {
         return [
             'sent_status' => 'boolean',
+            'sent_at' => 'datetime',
         ];
     }
 

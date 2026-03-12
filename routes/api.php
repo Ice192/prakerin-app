@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\JournalController;
 use App\Http\Controllers\Api\PlacementController;
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::post('/placements', [PlacementController::class, 'store']);
     Route::put('/placements/{placement}', [PlacementController::class, 'update']);
     Route::delete('/placements/{placement}', [PlacementController::class, 'destroy']);
+    Route::post('/announcements/important', [AnnouncementController::class, 'store']);
 
     Route::post('/journals', [JournalController::class, 'store']);
     Route::get('/journals', [JournalController::class, 'index']);
