@@ -9,7 +9,7 @@ const ProtectedRoute = ({ roles, children }) => {
         return (
             <div className="flex min-h-screen items-center justify-center bg-slate-100">
                 <div className="rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm text-slate-600 shadow-sm">
-                    Loading session...
+                    Memuat sesi...
                 </div>
             </div>
         );

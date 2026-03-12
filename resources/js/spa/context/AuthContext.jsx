@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
         const payload = response.data?.data;
 
         if (!payload?.access_token || !payload?.user) {
-            throw new Error('Unexpected login response.');
+            throw new Error('Respons login tidak valid.');
         }
 
         setUser(payload.user);
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
             await api.post('/auth/logout');
         } catch (error) {
             if (import.meta.env.DEV) {
-                console.warn(extractErrorMessage(error, 'Failed to logout cleanly.'));
+                console.warn(extractErrorMessage(error, 'Gagal logout dengan bersih.'));
             }
         } finally {
             setUser(null);
@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) {
-        throw new Error('useAuth must be used within AuthProvider.');
+        throw new Error('useAuth harus digunakan di dalam AuthProvider.');
     }
 
     return context;

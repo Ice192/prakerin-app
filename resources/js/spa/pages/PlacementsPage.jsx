@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import { api, extractErrorMessage } from '../services/api';
+import { formatPlacementStatus } from '../utils/localization';
 
 const INITIAL_FORM = {
     student_id: '',
@@ -46,7 +47,7 @@ const PlacementsPage = () => {
         try {
             await Promise.all([loadLookups(), loadPlacements()]);
         } catch (initError) {
-            setError(extractErrorMessage(initError, 'Failed to load placements.'));
+            setError(extractErrorMessage(initError, 'Gagal memuat data penempatan.'));
         } finally {
             setLoading(false);
         }
@@ -79,16 +80,16 @@ const PlacementsPage = () => {
         try {
             if (editingId) {
                 await api.put(`/placements/${editingId}`, payload);
-                setMessage('Placement updated successfully.');
+                setMessage('Data penempatan berhasil diperbarui.');
             } else {
                 await api.post('/placements', payload);
-                setMessage('Placement created successfully.');
+                setMessage('Data penempatan berhasil ditambahkan.');
             }
 
             resetForm();
             await loadPlacements();
         } catch (submitError) {
-            setError(extractErrorMessage(submitError, 'Failed to save placement.'));
+            setError(extractErrorMessage(submitError, 'Gagal menyimpan data penempatan.'));
         } finally {
             setSubmitting(false);
         }
@@ -107,7 +108,7 @@ const PlacementsPage = () => {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm('Delete this placement?')) {
+        if (!window.confirm('Hapus data penempatan ini?')) {
             return;
         }
 
@@ -116,18 +117,18 @@ const PlacementsPage = () => {
 
         try {
             await api.delete(`/placements/${id}`);
-            setMessage('Placement deleted successfully.');
+            setMessage('Data penempatan berhasil dihapus.');
             await loadPlacements();
         } catch (deleteError) {
-            setError(extractErrorMessage(deleteError, 'Failed to delete placement.'));
+            setError(extractErrorMessage(deleteError, 'Gagal menghapus data penempatan.'));
         }
     };
 
     return (
         <div>
             <PageHeader
-                title="Internship Placements"
-                description="Assign students to industry partners and supervising teachers."
+                title="Penempatan Prakerin"
+                description="Tetapkan siswa ke mitra industri dan guru pembimbing."
             />
 
             {error ? (
@@ -149,7 +150,7 @@ const PlacementsPage = () => {
                     onChange={(event) => setForm((prev) => ({ ...prev, student_id: event.target.value }))}
                     required
                 >
-                    <option value="">Select Student</option>
+                    <option value="">Pilih Siswa</option>
                     {lookups.students.map((student) => (
                         <option key={student.id} value={student.id}>
                             {student.name}
@@ -163,7 +164,7 @@ const PlacementsPage = () => {
                     onChange={(event) => setForm((prev) => ({ ...prev, industry_id: event.target.value }))}
                     required
                 >
-                    <option value="">Select Industry</option>
+                    <option value="">Pilih Industri</option>
                     {lookups.industries.map((industry) => (
                         <option key={industry.id} value={industry.id}>
                             {industry.name}
@@ -177,7 +178,7 @@ const PlacementsPage = () => {
                     onChange={(event) => setForm((prev) => ({ ...prev, teacher_id: event.target.value }))}
                     required
                 >
-                    <option value="">Select Teacher</option>
+                    <option value="">Pilih Guru</option>
                     {lookups.teachers.map((teacher) => (
                         <option key={teacher.id} value={teacher.id}>
                             {teacher.name}
@@ -209,7 +210,7 @@ const PlacementsPage = () => {
                 >
                     {lookups.placement_statuses.map((status) => (
                         <option key={status} value={status}>
-                            {status}
+                            {formatPlacementStatus(status)}
                         </option>
                     ))}
                 </select>
@@ -220,7 +221,7 @@ const PlacementsPage = () => {
                         disabled={submitting}
                         className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
                     >
-                        {submitting ? 'Saving...' : editingId ? 'Update Placement' : 'Add Placement'}
+                        {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Penempatan' : 'Tambah Penempatan'}
                     </button>
                     {editingId ? (
                         <button
@@ -228,7 +229,7 @@ const PlacementsPage = () => {
                             onClick={resetForm}
                             className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
                         >
-                            Cancel Edit
+                            Batal Edit
                         </button>
                     ) : null}
                 </div>
@@ -238,26 +239,26 @@ const PlacementsPage = () => {
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
                     <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th className="px-3 py-2">Student</th>
-                            <th className="px-3 py-2">Industry</th>
-                            <th className="px-3 py-2">Teacher</th>
-                            <th className="px-3 py-2">Start Date</th>
-                            <th className="px-3 py-2">End Date</th>
+                            <th className="px-3 py-2">Siswa</th>
+                            <th className="px-3 py-2">Industri</th>
+                            <th className="px-3 py-2">Guru</th>
+                            <th className="px-3 py-2">Tanggal Mulai</th>
+                            <th className="px-3 py-2">Tanggal Selesai</th>
                             <th className="px-3 py-2">Status</th>
-                            <th className="px-3 py-2">Actions</th>
+                            <th className="px-3 py-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {loading ? (
                             <tr>
                                 <td colSpan={7} className="px-3 py-4 text-center text-slate-500">
-                                    Loading placements...
+                                    Memuat data penempatan...
                                 </td>
                             </tr>
                         ) : placements.length === 0 ? (
                             <tr>
                                 <td colSpan={7} className="px-3 py-4 text-center text-slate-500">
-                                    No placements available.
+                                    Belum ada data penempatan.
                                 </td>
                             </tr>
                         ) : (
@@ -272,7 +273,9 @@ const PlacementsPage = () => {
                                     <td className="px-3 py-2 text-slate-700">
                                         {placement.internship_end_date}
                                     </td>
-                                    <td className="px-3 py-2 text-slate-700">{placement.status}</td>
+                                    <td className="px-3 py-2 text-slate-700">
+                                        {formatPlacementStatus(placement.status)}
+                                    </td>
                                     <td className="px-3 py-2">
                                         <div className="flex gap-2">
                                             <button
@@ -280,14 +283,14 @@ const PlacementsPage = () => {
                                                 onClick={() => startEdit(placement)}
                                                 className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
                                             >
-                                                Edit
+                                                Ubah
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => handleDelete(placement.id)}
                                                 className="rounded border border-rose-300 px-2 py-1 text-xs text-rose-700 hover:bg-rose-50"
                                             >
-                                                Delete
+                                                Hapus
                                             </button>
                                         </div>
                                     </td>

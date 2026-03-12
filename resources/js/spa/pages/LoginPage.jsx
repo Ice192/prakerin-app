@@ -25,7 +25,7 @@ const LoginPage = () => {
             const redirectTo = location.state?.from?.pathname || '/dashboard';
             navigate(redirectTo, { replace: true });
         } catch (submitError) {
-            setError(extractErrorMessage(submitError, 'Failed to login.'));
+            setError(extractErrorMessage(submitError, 'Gagal masuk.'));
         } finally {
             setLoading(false);
         }
@@ -34,10 +34,10 @@ const LoginPage = () => {
     return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 px-4 py-8">
             <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl">
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Internship Management</p>
-                <h1 className="mt-2 text-2xl font-semibold text-slate-900">Login</h1>
+                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Manajemen Prakerin</p>
+                <h1 className="mt-2 text-2xl font-semibold text-slate-900">Masuk</h1>
                 <p className="mt-1 text-sm text-slate-600">
-                    Use your account to access the Internship Management System.
+                    Gunakan akun Anda untuk mengakses Sistem Manajemen Prakerin.
                 </p>
 
                 <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
@@ -56,7 +56,7 @@ const LoginPage = () => {
                     </label>
 
                     <label className="block">
-                        <span className="mb-1 block text-sm font-medium text-slate-700">Password</span>
+                        <span className="mb-1 block text-sm font-medium text-slate-700">Kata Sandi</span>
                         <input
                             type="password"
                             value={form.password}
@@ -80,7 +80,7 @@ const LoginPage = () => {
                         disabled={loading}
                         className="w-full rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        {loading ? 'Signing in...' : 'Sign In'}
+                        {loading ? 'Sedang masuk...' : 'Masuk'}
                     </button>
                 </form>
             </div>

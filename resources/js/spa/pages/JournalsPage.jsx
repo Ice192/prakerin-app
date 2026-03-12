@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import { useAuth } from '../context/AuthContext';
 import { api, extractErrorMessage } from '../services/api';
+import { formatJournalStatus } from '../utils/localization';
 
 const INITIAL_FORM = {
     date: '',
@@ -28,7 +29,7 @@ const JournalsPage = () => {
             const response = await api.get('/journals');
             setJournals(response.data?.data ?? []);
         } catch (fetchError) {
-            setError(extractErrorMessage(fetchError, 'Failed to load journals.'));
+            setError(extractErrorMessage(fetchError, 'Gagal memuat data jurnal.'));
         } finally {
             setLoading(false);
         }
@@ -56,16 +57,16 @@ const JournalsPage = () => {
         try {
             if (editingId) {
                 await api.put(`/journals/${editingId}`, form);
-                setMessage('Journal updated successfully.');
+                setMessage('Jurnal berhasil diperbarui.');
             } else {
                 await api.post('/journals', form);
-                setMessage('Journal created successfully.');
+                setMessage('Jurnal berhasil ditambahkan.');
             }
 
             resetForm();
             await loadJournals();
         } catch (submitError) {
-            setError(extractErrorMessage(submitError, 'Failed to save journal.'));
+            setError(extractErrorMessage(submitError, 'Gagal menyimpan jurnal.'));
         } finally {
             setSubmitting(false);
         }
@@ -87,18 +88,18 @@ const JournalsPage = () => {
             await api.patch(`/journals/${journalId}/verify`, {
                 verification_status: status,
             });
-            setMessage(`Journal marked as ${status}.`);
+            setMessage(`Status jurnal berhasil diubah menjadi ${formatJournalStatus(status)}.`);
             await loadJournals();
         } catch (verifyError) {
-            setError(extractErrorMessage(verifyError, 'Failed to verify journal.'));
+            setError(extractErrorMessage(verifyError, 'Gagal memverifikasi jurnal.'));
         }
     };
 
     return (
         <div>
             <PageHeader
-                title="Student Journals"
-                description="Track daily internship activities and verification status."
+                title="Jurnal Siswa"
+                description="Pantau aktivitas prakerin harian dan status verifikasi."
             />
 
             {error ? (
@@ -124,7 +125,7 @@ const JournalsPage = () => {
                     />
                     <textarea
                         rows={4}
-                        placeholder="Describe your internship activity..."
+                        placeholder="Tuliskan aktivitas prakerin Anda..."
                         className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                         value={form.activity}
                         onChange={(event) => setForm((prev) => ({ ...prev, activity: event.target.value }))}
@@ -135,8 +136,8 @@ const JournalsPage = () => {
                             type="submit"
                             disabled={submitting}
                             className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
-                        >
-                            {submitting ? 'Saving...' : editingId ? 'Update Journal' : 'Add Journal'}
+                    >
+                            {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Jurnal' : 'Tambah Jurnal'}
                         </button>
                         {editingId ? (
                             <button
@@ -144,14 +145,14 @@ const JournalsPage = () => {
                                 onClick={resetForm}
                                 className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
                             >
-                                Cancel Edit
+                                Batal Edit
                             </button>
                         ) : null}
                     </div>
                 </form>
             ) : (
                 <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
-                    This account can view journals only. Journal create/edit is available for student accounts.
+                    Akun ini hanya dapat melihat jurnal. Fitur tambah dan ubah jurnal hanya untuk akun siswa.
                 </div>
             )}
 
@@ -159,24 +160,24 @@ const JournalsPage = () => {
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
                     <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th className="px-3 py-2">Date</th>
-                            <th className="px-3 py-2">Student</th>
-                            <th className="px-3 py-2">Activity</th>
+                            <th className="px-3 py-2">Tanggal</th>
+                            <th className="px-3 py-2">Siswa</th>
+                            <th className="px-3 py-2">Aktivitas</th>
                             <th className="px-3 py-2">Status</th>
-                            <th className="px-3 py-2">Actions</th>
+                            <th className="px-3 py-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {loading ? (
                             <tr>
                                 <td colSpan={5} className="px-3 py-4 text-center text-slate-500">
-                                    Loading journals...
+                                    Memuat data jurnal...
                                 </td>
                             </tr>
                         ) : journals.length === 0 ? (
                             <tr>
                                 <td colSpan={5} className="px-3 py-4 text-center text-slate-500">
-                                    No journals available.
+                                    Belum ada data jurnal.
                                 </td>
                             </tr>
                         ) : (
@@ -185,7 +186,9 @@ const JournalsPage = () => {
                                     <td className="px-3 py-2 text-slate-700">{journal.date}</td>
                                     <td className="px-3 py-2 text-slate-700">{journal.student_name}</td>
                                     <td className="px-3 py-2 text-slate-700">{journal.activity}</td>
-                                    <td className="px-3 py-2 text-slate-700">{journal.verification_status}</td>
+                                    <td className="px-3 py-2 text-slate-700">
+                                        {formatJournalStatus(journal.verification_status)}
+                                    </td>
                                     <td className="px-3 py-2">
                                         <div className="flex flex-wrap gap-2">
                                             {canEditJournal ? (
@@ -194,7 +197,7 @@ const JournalsPage = () => {
                                                     onClick={() => startEdit(journal)}
                                                     className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
                                                 >
-                                                    Edit
+                                                    Ubah
                                                 </button>
                                             ) : null}
 
@@ -205,14 +208,14 @@ const JournalsPage = () => {
                                                         onClick={() => verifyJournal(journal.id, 'verified')}
                                                         className="rounded border border-emerald-300 px-2 py-1 text-xs text-emerald-700 hover:bg-emerald-50"
                                                     >
-                                                        Verify
+                                                        Verifikasi
                                                     </button>
                                                     <button
                                                         type="button"
                                                         onClick={() => verifyJournal(journal.id, 'rejected')}
                                                         className="rounded border border-rose-300 px-2 py-1 text-xs text-rose-700 hover:bg-rose-50"
                                                     >
-                                                        Reject
+                                                        Tolak
                                                     </button>
                                                 </>
                                             ) : null}

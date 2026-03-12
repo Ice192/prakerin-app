@@ -18,7 +18,7 @@ const SimpleBarChart = ({ data }) => {
     const maxValue = Math.max(...normalized.map((item) => item.value), 1);
 
     if (normalized.length === 0) {
-        return <p className="text-sm text-slate-500">No chart data available.</p>;
+        return <p className="text-sm text-slate-500">Data grafik belum tersedia.</p>;
     }
 
     return (

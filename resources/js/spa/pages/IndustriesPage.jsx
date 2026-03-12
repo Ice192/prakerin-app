@@ -26,7 +26,7 @@ const IndustriesPage = () => {
             const response = await api.get('/industries');
             setIndustries(response.data?.data ?? []);
         } catch (fetchError) {
-            setError(extractErrorMessage(fetchError, 'Failed to load industries.'));
+            setError(extractErrorMessage(fetchError, 'Gagal memuat data industri.'));
         } finally {
             setLoading(false);
         }
@@ -50,16 +50,16 @@ const IndustriesPage = () => {
         try {
             if (editingId) {
                 await api.put(`/industries/${editingId}`, form);
-                setMessage('Industry updated successfully.');
+                setMessage('Data industri berhasil diperbarui.');
             } else {
                 await api.post('/industries', form);
-                setMessage('Industry created successfully.');
+                setMessage('Data industri berhasil ditambahkan.');
             }
 
             resetForm();
             await loadIndustries();
         } catch (submitError) {
-            setError(extractErrorMessage(submitError, 'Failed to save industry.'));
+            setError(extractErrorMessage(submitError, 'Gagal menyimpan data industri.'));
         } finally {
             setSubmitting(false);
         }
@@ -76,7 +76,7 @@ const IndustriesPage = () => {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm('Delete this industry?')) {
+        if (!window.confirm('Hapus data industri ini?')) {
             return;
         }
 
@@ -85,18 +85,18 @@ const IndustriesPage = () => {
 
         try {
             await api.delete(`/industries/${id}`);
-            setMessage('Industry deleted successfully.');
+            setMessage('Data industri berhasil dihapus.');
             await loadIndustries();
         } catch (deleteError) {
-            setError(extractErrorMessage(deleteError, 'Failed to delete industry.'));
+            setError(extractErrorMessage(deleteError, 'Gagal menghapus data industri.'));
         }
     };
 
     return (
         <div>
             <PageHeader
-                title="Industries Management"
-                description="Manage internship partner industries and contact details."
+                title="Manajemen Industri"
+                description="Kelola mitra industri prakerin beserta detail kontaknya."
             />
 
             {error ? (
@@ -114,7 +114,7 @@ const IndustriesPage = () => {
             <form className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 p-4 md:grid-cols-2" onSubmit={handleSubmit}>
                 <input
                     type="text"
-                    placeholder="Industry Name"
+                    placeholder="Nama Industri"
                     className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                     value={form.name}
                     onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
@@ -130,7 +130,7 @@ const IndustriesPage = () => {
                 />
                 <input
                     type="text"
-                    placeholder="Contact Person"
+                    placeholder="Narahubung"
                     className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                     value={form.contact_person}
                     onChange={(event) =>
@@ -140,7 +140,7 @@ const IndustriesPage = () => {
                 />
                 <input
                     type="text"
-                    placeholder="Address"
+                    placeholder="Alamat"
                     className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                     value={form.address}
                     onChange={(event) => setForm((prev) => ({ ...prev, address: event.target.value }))}
@@ -153,7 +153,7 @@ const IndustriesPage = () => {
                         disabled={submitting}
                         className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
                     >
-                        {submitting ? 'Saving...' : editingId ? 'Update Industry' : 'Add Industry'}
+                        {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Industri' : 'Tambah Industri'}
                     </button>
                     {editingId ? (
                         <button
@@ -161,7 +161,7 @@ const IndustriesPage = () => {
                             onClick={resetForm}
                             className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
                         >
-                            Cancel Edit
+                            Batal Edit
                         </button>
                     ) : null}
                 </div>
@@ -171,24 +171,24 @@ const IndustriesPage = () => {
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
                     <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th className="px-3 py-2">Name</th>
-                            <th className="px-3 py-2">Contact</th>
+                            <th className="px-3 py-2">Nama</th>
+                            <th className="px-3 py-2">Kontak</th>
                             <th className="px-3 py-2">Email</th>
-                            <th className="px-3 py-2">Address</th>
-                            <th className="px-3 py-2">Actions</th>
+                            <th className="px-3 py-2">Alamat</th>
+                            <th className="px-3 py-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {loading ? (
                             <tr>
                                 <td colSpan={5} className="px-3 py-4 text-center text-slate-500">
-                                    Loading industries...
+                                    Memuat data industri...
                                 </td>
                             </tr>
                         ) : industries.length === 0 ? (
                             <tr>
                                 <td colSpan={5} className="px-3 py-4 text-center text-slate-500">
-                                    No industries available.
+                                    Belum ada data industri.
                                 </td>
                             </tr>
                         ) : (
@@ -205,14 +205,14 @@ const IndustriesPage = () => {
                                                 onClick={() => startEdit(industry)}
                                                 className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
                                             >
-                                                Edit
+                                                Ubah
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => handleDelete(industry.id)}
                                                 className="rounded border border-rose-300 px-2 py-1 text-xs text-rose-700 hover:bg-rose-50"
                                             >
-                                                Delete
+                                                Hapus
                                             </button>
                                         </div>
                                     </td>

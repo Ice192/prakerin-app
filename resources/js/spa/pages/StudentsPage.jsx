@@ -28,7 +28,7 @@ const StudentsPage = () => {
             const response = await api.get('/students');
             setStudents(response.data?.data ?? []);
         } catch (fetchError) {
-            setError(extractErrorMessage(fetchError, 'Failed to load students.'));
+            setError(extractErrorMessage(fetchError, 'Gagal memuat data siswa.'));
         } finally {
             setLoading(false);
         }
@@ -57,16 +57,16 @@ const StudentsPage = () => {
                 }
 
                 await api.put(`/students/${editingId}`, payload);
-                setMessage('Student updated successfully.');
+                setMessage('Data siswa berhasil diperbarui.');
             } else {
                 await api.post('/students', form);
-                setMessage('Student created successfully.');
+                setMessage('Data siswa berhasil ditambahkan.');
             }
 
             resetForm();
             await loadStudents();
         } catch (submitError) {
-            setError(extractErrorMessage(submitError, 'Failed to save student.'));
+            setError(extractErrorMessage(submitError, 'Gagal menyimpan data siswa.'));
         } finally {
             setSubmitting(false);
         }
@@ -85,7 +85,7 @@ const StudentsPage = () => {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm('Delete this student?')) {
+        if (!window.confirm('Hapus data siswa ini?')) {
             return;
         }
 
@@ -94,18 +94,18 @@ const StudentsPage = () => {
 
         try {
             await api.delete(`/students/${id}`);
-            setMessage('Student deleted successfully.');
+            setMessage('Data siswa berhasil dihapus.');
             await loadStudents();
         } catch (deleteError) {
-            setError(extractErrorMessage(deleteError, 'Failed to delete student.'));
+            setError(extractErrorMessage(deleteError, 'Gagal menghapus data siswa.'));
         }
     };
 
     return (
         <div>
             <PageHeader
-                title="Students Management"
-                description="Create, update, and remove student records."
+                title="Manajemen Siswa"
+                description="Tambah, ubah, dan hapus data siswa."
             />
 
             {error ? (
@@ -123,7 +123,7 @@ const StudentsPage = () => {
             <form className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 p-4 md:grid-cols-2" onSubmit={handleSubmit}>
                 <input
                     type="text"
-                    placeholder="Full Name"
+                    placeholder="Nama Lengkap"
                     className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                     value={form.name}
                     onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
@@ -139,7 +139,7 @@ const StudentsPage = () => {
                 />
                 <input
                     type="password"
-                    placeholder={editingId ? 'Password (optional)' : 'Password'}
+                    placeholder={editingId ? 'Kata Sandi (opsional)' : 'Kata Sandi'}
                     className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                     value={form.password}
                     onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
@@ -155,7 +155,7 @@ const StudentsPage = () => {
                 />
                 <input
                     type="text"
-                    placeholder="Class"
+                    placeholder="Kelas"
                     className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                     value={form.class}
                     onChange={(event) => setForm((prev) => ({ ...prev, class: event.target.value }))}
@@ -163,7 +163,7 @@ const StudentsPage = () => {
                 />
                 <input
                     type="text"
-                    placeholder="Major"
+                    placeholder="Jurusan"
                     className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                     value={form.major}
                     onChange={(event) => setForm((prev) => ({ ...prev, major: event.target.value }))}
@@ -176,7 +176,7 @@ const StudentsPage = () => {
                         disabled={submitting}
                         className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
                     >
-                        {submitting ? 'Saving...' : editingId ? 'Update Student' : 'Add Student'}
+                        {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Siswa' : 'Tambah Siswa'}
                     </button>
                     {editingId ? (
                         <button
@@ -184,7 +184,7 @@ const StudentsPage = () => {
                             onClick={resetForm}
                             className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
                         >
-                            Cancel Edit
+                            Batal Edit
                         </button>
                     ) : null}
                 </div>
@@ -194,25 +194,25 @@ const StudentsPage = () => {
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
                     <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th className="px-3 py-2">Name</th>
+                            <th className="px-3 py-2">Nama</th>
                             <th className="px-3 py-2">Email</th>
                             <th className="px-3 py-2">NIS</th>
-                            <th className="px-3 py-2">Class</th>
-                            <th className="px-3 py-2">Major</th>
-                            <th className="px-3 py-2">Actions</th>
+                            <th className="px-3 py-2">Kelas</th>
+                            <th className="px-3 py-2">Jurusan</th>
+                            <th className="px-3 py-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {loading ? (
                             <tr>
                                 <td colSpan={6} className="px-3 py-4 text-center text-slate-500">
-                                    Loading students...
+                                    Memuat data siswa...
                                 </td>
                             </tr>
                         ) : students.length === 0 ? (
                             <tr>
                                 <td colSpan={6} className="px-3 py-4 text-center text-slate-500">
-                                    No students available.
+                                    Belum ada data siswa.
                                 </td>
                             </tr>
                         ) : (
@@ -230,14 +230,14 @@ const StudentsPage = () => {
                                                 onClick={() => startEdit(student)}
                                                 className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
                                             >
-                                                Edit
+                                                Ubah
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => handleDelete(student.id)}
                                                 className="rounded border border-rose-300 px-2 py-1 text-xs text-rose-700 hover:bg-rose-50"
                                             >
-                                                Delete
+                                                Hapus
                                             </button>
                                         </div>
                                     </td>

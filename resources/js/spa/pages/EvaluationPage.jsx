@@ -49,7 +49,7 @@ const EvaluationPage = () => {
         try {
             await Promise.all([loadLookups(), loadEvaluations()]);
         } catch (initError) {
-            setError(extractErrorMessage(initError, 'Failed to load evaluations.'));
+            setError(extractErrorMessage(initError, 'Gagal memuat data penilaian.'));
         } finally {
             setLoading(false);
         }
@@ -89,16 +89,16 @@ const EvaluationPage = () => {
         try {
             if (editingId) {
                 await api.put(`/evaluations/${editingId}`, payload);
-                setMessage('Evaluation updated successfully.');
+                setMessage('Penilaian berhasil diperbarui.');
             } else {
                 await api.post('/evaluations', payload);
-                setMessage('Evaluation created successfully.');
+                setMessage('Penilaian berhasil ditambahkan.');
             }
 
             resetForm();
             await loadEvaluations();
         } catch (submitError) {
-            setError(extractErrorMessage(submitError, 'Failed to save evaluation.'));
+            setError(extractErrorMessage(submitError, 'Gagal menyimpan penilaian.'));
         } finally {
             setSubmitting(false);
         }
@@ -121,7 +121,7 @@ const EvaluationPage = () => {
             return;
         }
 
-        if (!window.confirm('Delete this evaluation?')) {
+        if (!window.confirm('Hapus data penilaian ini?')) {
             return;
         }
 
@@ -130,18 +130,18 @@ const EvaluationPage = () => {
 
         try {
             await api.delete(`/evaluations/${id}`);
-            setMessage('Evaluation deleted successfully.');
+            setMessage('Penilaian berhasil dihapus.');
             await loadEvaluations();
         } catch (deleteError) {
-            setError(extractErrorMessage(deleteError, 'Failed to delete evaluation.'));
+            setError(extractErrorMessage(deleteError, 'Gagal menghapus penilaian.'));
         }
     };
 
     return (
         <div>
             <PageHeader
-                title="Evaluation"
-                description="Record and track internship performance evaluations."
+                title="Penilaian"
+                description="Catat dan pantau penilaian performa prakerin."
             />
 
             {error ? (
@@ -164,7 +164,7 @@ const EvaluationPage = () => {
                         onChange={(event) => setForm((prev) => ({ ...prev, student_id: event.target.value }))}
                         required
                     >
-                        <option value="">Select Student</option>
+                        <option value="">Pilih Siswa</option>
                         {lookups.students.map((student) => (
                             <option key={student.id} value={student.id}>
                                 {student.name}
@@ -179,7 +179,7 @@ const EvaluationPage = () => {
                         required
                         disabled={user?.role === 'industry'}
                     >
-                        <option value="">Select Industry</option>
+                        <option value="">Pilih Industri</option>
                         {lookups.industries.map((industry) => (
                             <option key={industry.id} value={industry.id}>
                                 {industry.name}
@@ -192,7 +192,7 @@ const EvaluationPage = () => {
                         min={0}
                         max={100}
                         className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                        placeholder="Discipline Score"
+                        placeholder="Nilai Disiplin"
                         value={form.discipline_score}
                         onChange={(event) =>
                             setForm((prev) => ({ ...prev, discipline_score: event.target.value }))
@@ -205,7 +205,7 @@ const EvaluationPage = () => {
                         min={0}
                         max={100}
                         className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                        placeholder="Teamwork Score"
+                        placeholder="Nilai Kerja Sama"
                         value={form.teamwork_score}
                         onChange={(event) =>
                             setForm((prev) => ({ ...prev, teamwork_score: event.target.value }))
@@ -218,7 +218,7 @@ const EvaluationPage = () => {
                         min={0}
                         max={100}
                         className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                        placeholder="Skill Score"
+                        placeholder="Nilai Keterampilan"
                         value={form.skill_score}
                         onChange={(event) =>
                             setForm((prev) => ({ ...prev, skill_score: event.target.value }))
@@ -231,7 +231,7 @@ const EvaluationPage = () => {
                         min={0}
                         max={100}
                         className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                        placeholder="Responsibility Score"
+                        placeholder="Nilai Tanggung Jawab"
                         value={form.responsibility_score}
                         onChange={(event) =>
                             setForm((prev) => ({ ...prev, responsibility_score: event.target.value }))
@@ -244,8 +244,8 @@ const EvaluationPage = () => {
                             type="submit"
                             disabled={submitting}
                             className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
-                        >
-                            {submitting ? 'Saving...' : editingId ? 'Update Evaluation' : 'Add Evaluation'}
+                    >
+                            {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Penilaian' : 'Tambah Penilaian'}
                         </button>
                         {editingId ? (
                             <button
@@ -253,14 +253,14 @@ const EvaluationPage = () => {
                                 onClick={resetForm}
                                 className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
                             >
-                                Cancel Edit
+                                Batal Edit
                             </button>
                         ) : null}
                     </div>
                 </form>
             ) : (
                 <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
-                    This account can only view evaluation results.
+                    Akun ini hanya dapat melihat hasil penilaian.
                 </div>
             )}
 
@@ -268,27 +268,27 @@ const EvaluationPage = () => {
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
                     <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th className="px-3 py-2">Student</th>
-                            <th className="px-3 py-2">Industry</th>
-                            <th className="px-3 py-2">Discipline</th>
-                            <th className="px-3 py-2">Teamwork</th>
-                            <th className="px-3 py-2">Skill</th>
-                            <th className="px-3 py-2">Responsibility</th>
-                            <th className="px-3 py-2">Final Score</th>
-                            <th className="px-3 py-2">Actions</th>
+                            <th className="px-3 py-2">Siswa</th>
+                            <th className="px-3 py-2">Industri</th>
+                            <th className="px-3 py-2">Disiplin</th>
+                            <th className="px-3 py-2">Kerja Sama</th>
+                            <th className="px-3 py-2">Keterampilan</th>
+                            <th className="px-3 py-2">Tanggung Jawab</th>
+                            <th className="px-3 py-2">Nilai Akhir</th>
+                            <th className="px-3 py-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {loading ? (
                             <tr>
                                 <td colSpan={8} className="px-3 py-4 text-center text-slate-500">
-                                    Loading evaluations...
+                                    Memuat data penilaian...
                                 </td>
                             </tr>
                         ) : evaluations.length === 0 ? (
                             <tr>
                                 <td colSpan={8} className="px-3 py-4 text-center text-slate-500">
-                                    No evaluations available.
+                                    Belum ada data penilaian.
                                 </td>
                             </tr>
                         ) : (
@@ -313,7 +313,7 @@ const EvaluationPage = () => {
                                                     onClick={() => startEdit(evaluation)}
                                                     className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
                                                 >
-                                                    Edit
+                                                    Ubah
                                                 </button>
                                             ) : null}
                                             {canDelete ? (
@@ -322,7 +322,7 @@ const EvaluationPage = () => {
                                                     onClick={() => handleDelete(evaluation.id)}
                                                     className="rounded border border-rose-300 px-2 py-1 text-xs text-rose-700 hover:bg-rose-50"
                                                 >
-                                                    Delete
+                                                    Hapus
                                                 </button>
                                             ) : null}
                                         </div>

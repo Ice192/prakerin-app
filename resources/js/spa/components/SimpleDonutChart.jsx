@@ -38,7 +38,7 @@ const SimpleDonutChart = ({ data }) => {
     const chartBackground = buildConicGradient(normalized, total);
 
     if (normalized.length === 0) {
-        return <p className="text-sm text-slate-500">No chart data available.</p>;
+        return <p className="text-sm text-slate-500">Data grafik belum tersedia.</p>;
     }
 
     return (
@@ -46,7 +46,7 @@ const SimpleDonutChart = ({ data }) => {
             <div
                 className="relative h-36 w-36 rounded-full"
                 style={{ background: chartBackground }}
-                aria-label="Journal overview chart"
+                aria-label="Grafik ringkasan jurnal"
             >
                 <div className="absolute inset-[18px] flex items-center justify-center rounded-full bg-white text-sm font-semibold text-slate-900">
                     {total}

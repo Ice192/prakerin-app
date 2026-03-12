@@ -6,7 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 const container = document.getElementById('app');
 
 if (!container) {
-    throw new Error('SPA root element not found.');
+    throw new Error('Elemen root SPA tidak ditemukan.');
 }
 
 createRoot(container).render(
