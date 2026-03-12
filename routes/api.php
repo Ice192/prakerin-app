@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\JournalController;
 use App\Http\Controllers\Api\PlacementController;
 
 Route::prefix('auth')->group(function (): void {
@@ -24,4 +25,9 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::post('/placements', [PlacementController::class, 'store']);
     Route::put('/placements/{placement}', [PlacementController::class, 'update']);
     Route::delete('/placements/{placement}', [PlacementController::class, 'destroy']);
+
+    Route::post('/journals', [JournalController::class, 'store']);
+    Route::get('/journals', [JournalController::class, 'index']);
+    Route::put('/journals/{journal}', [JournalController::class, 'update']);
+    Route::patch('/journals/{journal}/verify', [JournalController::class, 'verify']);
 });
