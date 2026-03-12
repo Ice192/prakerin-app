@@ -1,59 +1,286 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Internship Management System (Prakerin)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel 12 backend + React (Vite) frontend for internship management.
 
-## About Laravel
+## Production Checklist
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Configure production `.env` values.
+- Install PHP/Composer dependencies without dev packages.
+- Install Node dependencies and build frontend assets.
+- Run database migrations with `--force`.
+- Cache Laravel configuration/routes/views/events.
+- Configure SMTP mail credentials.
+- Enable scheduler and queue workers on the server.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 1. Environment Variables
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Use the provided template:
 
-## Learning Laravel
+```bash
+cp .env.production.example .env
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Update at least these variables:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```dotenv
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://ims.example.com
+APP_TIMEZONE=Asia/Makassar
+CORS_ALLOWED_ORIGINS=https://ims.example.com
 
-## Laravel Sponsors
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=prakerin_management
+DB_USERNAME=prakerin_user
+DB_PASSWORD=your-db-password
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+QUEUE_CONNECTION=database
+CACHE_STORE=database
+SESSION_DRIVER=database
+SESSION_SECURE_COOKIE=true
 
-### Premium Partners
+MAIL_MAILER=smtp
+MAIL_SCHEME=tls
+MAIL_HOST=smtp.mailprovider.com
+MAIL_PORT=587
+MAIL_USERNAME=no-reply@example.com
+MAIL_PASSWORD=your-smtp-password
+MAIL_FROM_ADDRESS=no-reply@example.com
+MAIL_FROM_NAME="Internship Management System"
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+VITE_API_BASE_URL=https://ims.example.com/api
+```
 
-## Contributing
+Notes:
+- `VITE_API_BASE_URL` can be `/api` if frontend and API share the same domain.
+- If you set only a domain (for example `https://api.example.com`), frontend code now auto-appends `/api`.
+- `CORS_ALLOWED_ORIGINS` accepts comma-separated origins for cross-domain frontend access.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 2. Backend Production Optimization
 
-## Code of Conduct
+Run from project root after `.env` is ready:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+composer install --no-dev --optimize-autoloader
+# run once on first deployment if APP_KEY is empty
+php artisan key:generate
+php artisan migrate --force
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan event:cache
+php artisan view:cache
+```
 
-## Security Vulnerabilities
+## 3. SMTP Email Configuration
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Set SMTP variables in `.env` (`MAIL_*` values above), then clear and recache config:
 
-## License
+```bash
+php artisan config:clear
+php artisan config:cache
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Optional quick test:
+
+```bash
+php artisan tinker
+```
+
+```php
+Illuminate\Support\Facades\Mail::raw('SMTP test from IMS', function ($message) {
+    $message->to('admin@example.com')->subject('SMTP Test');
+});
+```
+
+## 4. Frontend Build + Production API
+
+```bash
+npm ci
+npm run build
+```
+
+Vite output will be generated in `public/build`, served by Laravel.
+
+## 5. VPS Deployment (Ubuntu + Nginx + PHP-FPM)
+
+Example commands:
+
+```bash
+sudo apt update
+sudo apt install -y nginx git unzip curl supervisor mysql-server redis-server
+sudo apt install -y php8.3-fpm php8.3-cli php8.3-mbstring php8.3-xml php8.3-curl php8.3-mysql php8.3-zip php8.3-bcmath php8.3-intl
+```
+
+Install Composer and Node.js (LTS), then deploy app:
+
+```bash
+cd /var/www
+git clone <your-repo-url> prakerin-app
+cd prakerin-app
+cp .env.production.example .env
+
+composer install --no-dev --optimize-autoloader
+npm ci
+npm run build
+
+# run once on first deployment if APP_KEY is empty
+php artisan key:generate
+php artisan migrate --force
+php artisan storage:link
+
+php artisan config:cache
+php artisan route:cache
+php artisan event:cache
+php artisan view:cache
+
+sudo chown -R www-data:www-data storage bootstrap/cache
+sudo chmod -R ug+rwx storage bootstrap/cache
+```
+
+Nginx virtual host example (`/etc/nginx/sites-available/prakerin-app`):
+
+```nginx
+server {
+    listen 80;
+    server_name ims.example.com;
+    root /var/www/prakerin-app/public;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
+
+Enable and reload:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/prakerin-app /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+sudo systemctl restart php8.3-fpm
+```
+
+## 6. Database Migration Instructions
+
+Use this flow on every release:
+
+```bash
+# optional backup first (recommended)
+# mysqldump -u <user> -p prakerin_management > backup.sql
+
+php artisan migrate --force
+```
+
+For status checks:
+
+```bash
+php artisan migrate:status
+```
+
+## 7. Running Scheduler
+
+Recommended: cron + `schedule:run`.
+
+Open crontab:
+
+```bash
+crontab -e
+```
+
+Add:
+
+```cron
+* * * * * cd /var/www/prakerin-app && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Useful checks:
+
+```bash
+php artisan schedule:list
+php artisan schedule:run
+```
+
+Alternative long-running mode:
+
+```bash
+php artisan schedule:work
+```
+
+## 8. Running Queue Workers
+
+Use Supervisor in production.
+
+Create `/etc/supervisor/conf.d/prakerin-worker.conf`:
+
+```ini
+[program:prakerin-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=/usr/bin/php /var/www/prakerin-app/artisan queue:work database --sleep=3 --tries=3 --max-time=3600
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/var/www/prakerin-app/storage/logs/worker.log
+stopwaitsecs=3600
+```
+
+Apply and start:
+
+```bash
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start prakerin-worker:*
+sudo supervisorctl status
+```
+
+Queue operations:
+
+```bash
+php artisan queue:failed
+php artisan queue:retry all
+php artisan queue:restart
+```
+
+## 9. Ready-To-Copy Deployment Templates
+
+Template files are available in this repository:
+
+- `deploy/nginx/prakerin-app.conf`
+- `deploy/supervisor/prakerin-worker.conf`
+- `deploy/cron/prakerin-scheduler.cron`
+
+Copy commands:
+
+```bash
+sudo cp deploy/nginx/prakerin-app.conf /etc/nginx/sites-available/prakerin-app
+sudo ln -s /etc/nginx/sites-available/prakerin-app /etc/nginx/sites-enabled/prakerin-app
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+```bash
+sudo cp deploy/supervisor/prakerin-worker.conf /etc/supervisor/conf.d/prakerin-worker.conf
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start prakerin-worker:*
+```
+
+```bash
+crontab deploy/cron/prakerin-scheduler.cron
+crontab -l
+```

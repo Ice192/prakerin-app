@@ -1,7 +1,28 @@
 import axios from 'axios';
 
+const resolveApiBaseUrl = () => {
+    const rawValue = import.meta.env.VITE_API_BASE_URL;
+
+    if (typeof rawValue !== 'string') {
+        return '/api';
+    }
+
+    const trimmed = rawValue.trim().replace(/\/+$/, '');
+
+    if (trimmed === '') {
+        return '/api';
+    }
+
+    // If only a domain is provided, default to the Laravel API prefix.
+    if (/^https?:\/\/[^/]+$/i.test(trimmed)) {
+        return `${trimmed}/api`;
+    }
+
+    return trimmed;
+};
+
 export const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',
+    baseURL: resolveApiBaseUrl(),
     headers: {
         'Content-Type': 'application/json',
     },
