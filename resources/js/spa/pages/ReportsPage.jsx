@@ -40,12 +40,14 @@ const ReportsPage = () => {
             />
 
             {error ? (
-                <div className="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                <div className="alert-error">
                     {error}
                 </div>
             ) : null}
 
-            {loading ? <p className="text-sm text-slate-600">Memuat laporan...</p> : null}
+            {loading ? (
+                <p className="surface-soft px-4 py-3 text-sm text-slate-600 fade-up">Memuat laporan...</p>
+            ) : null}
 
             {report?.summary ? (
                 <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
@@ -57,7 +59,7 @@ const ReportsPage = () => {
 
             {report?.placements_by_status?.length ? (
                 <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-                    <div className="rounded-xl border border-slate-200 p-4">
+                    <div className="surface-card p-4 hover-glow fade-up">
                         <h3 className="mb-3 text-sm font-semibold text-slate-900">Penempatan per Status</h3>
                         <ul className="space-y-2 text-sm text-slate-700">
                             {report.placements_by_status.map((item) => (
@@ -69,7 +71,7 @@ const ReportsPage = () => {
                         </ul>
                     </div>
 
-                    <div className="rounded-xl border border-slate-200 p-4">
+                    <div className="surface-card p-4 hover-glow fade-up">
                         <h3 className="mb-3 text-sm font-semibold text-slate-900">Jurnal per Status</h3>
                         <ul className="space-y-2 text-sm text-slate-700">
                             {report.journals_by_status.map((item) => (
@@ -86,9 +88,9 @@ const ReportsPage = () => {
             {report?.top_students?.length ? (
                 <section className="mt-6">
                     <h3 className="mb-3 text-base font-semibold text-slate-900">Siswa Terbaik</h3>
-                    <div className="overflow-x-auto rounded-xl border border-slate-200">
+                    <div className="table-shell fade-up">
                         <table className="min-w-full divide-y divide-slate-200 text-sm">
-                            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                            <thead className="table-head">
                                 <tr>
                                     <th className="px-3 py-2">Siswa</th>
                                     <th className="px-3 py-2">Rata-rata Nilai</th>
@@ -97,7 +99,7 @@ const ReportsPage = () => {
                             </thead>
                             <tbody className="divide-y divide-slate-100">
                                 {report.top_students.map((student) => (
-                                    <tr key={student.student_id}>
+                                    <tr key={student.student_id} className="table-row">
                                         <td className="px-3 py-2 text-slate-700">{student.student_name}</td>
                                         <td className="px-3 py-2 font-semibold text-slate-900">
                                             {student.average_score}
@@ -114,7 +116,7 @@ const ReportsPage = () => {
             ) : null}
 
             {report?.monthly_placements?.length ? (
-                <section className="mt-6 rounded-xl border border-slate-200 p-4">
+                <section className="mt-6 surface-card p-4 hover-glow fade-up">
                     <h3 className="mb-3 text-sm font-semibold text-slate-900">
                         Penempatan Bulanan (6 Bulan)
                     </h3>

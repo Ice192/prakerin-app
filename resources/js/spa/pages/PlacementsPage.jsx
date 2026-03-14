@@ -132,20 +132,20 @@ const PlacementsPage = () => {
             />
 
             {error ? (
-                <div className="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                <div className="alert-error">
                     {error}
                 </div>
             ) : null}
 
             {message ? (
-                <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                <div className="alert-success">
                     {message}
                 </div>
             ) : null}
 
-            <form className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 p-4 md:grid-cols-2 lg:grid-cols-3" onSubmit={handleSubmit}>
+            <form className="form-card md:grid-cols-2 lg:grid-cols-3 fade-up" onSubmit={handleSubmit}>
                 <select
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.student_id}
                     onChange={(event) => setForm((prev) => ({ ...prev, student_id: event.target.value }))}
                     required
@@ -159,7 +159,7 @@ const PlacementsPage = () => {
                 </select>
 
                 <select
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.industry_id}
                     onChange={(event) => setForm((prev) => ({ ...prev, industry_id: event.target.value }))}
                     required
@@ -173,7 +173,7 @@ const PlacementsPage = () => {
                 </select>
 
                 <select
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.teacher_id}
                     onChange={(event) => setForm((prev) => ({ ...prev, teacher_id: event.target.value }))}
                     required
@@ -188,7 +188,7 @@ const PlacementsPage = () => {
 
                 <input
                     type="date"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.start_date}
                     onChange={(event) => setForm((prev) => ({ ...prev, start_date: event.target.value }))}
                     required
@@ -196,14 +196,14 @@ const PlacementsPage = () => {
 
                 <input
                     type="date"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.end_date}
                     onChange={(event) => setForm((prev) => ({ ...prev, end_date: event.target.value }))}
                     required
                 />
 
                 <select
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.status}
                     onChange={(event) => setForm((prev) => ({ ...prev, status: event.target.value }))}
                     required
@@ -219,7 +219,7 @@ const PlacementsPage = () => {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+                        className="btn-primary"
                     >
                         {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Penempatan' : 'Tambah Penempatan'}
                     </button>
@@ -227,7 +227,7 @@ const PlacementsPage = () => {
                         <button
                             type="button"
                             onClick={resetForm}
-                            className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                            className="btn-secondary"
                         >
                             Batal Edit
                         </button>
@@ -235,9 +235,9 @@ const PlacementsPage = () => {
                 </div>
             </form>
 
-            <div className="mt-5 overflow-x-auto rounded-xl border border-slate-200">
+            <div className="table-shell fade-up">
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
-                    <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                    <thead className="table-head">
                         <tr>
                             <th className="px-3 py-2">Siswa</th>
                             <th className="px-3 py-2">Industri</th>
@@ -263,7 +263,7 @@ const PlacementsPage = () => {
                             </tr>
                         ) : (
                             placements.map((placement) => (
-                                <tr key={placement.id}>
+                                <tr key={placement.id} className="table-row">
                                     <td className="px-3 py-2 text-slate-700">{placement.student_name}</td>
                                     <td className="px-3 py-2 text-slate-700">{placement.industry_name}</td>
                                     <td className="px-3 py-2 text-slate-700">{placement.supervising_teacher}</td>
@@ -281,14 +281,14 @@ const PlacementsPage = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => startEdit(placement)}
-                                                className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
+                                                className="btn-secondary btn-xs"
                                             >
                                                 Ubah
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => handleDelete(placement.id)}
-                                                className="rounded border border-rose-300 px-2 py-1 text-xs text-rose-700 hover:bg-rose-50"
+                                                className="btn-danger btn-xs"
                                             >
                                                 Hapus
                                             </button>

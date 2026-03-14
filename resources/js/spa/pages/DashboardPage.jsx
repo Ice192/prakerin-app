@@ -35,7 +35,7 @@ const DashboardPage = () => {
     }, []);
 
     if (loading) {
-        return <p className="text-sm text-slate-600">Memuat dasbor...</p>;
+        return <p className="surface-soft px-4 py-3 text-sm text-slate-600 fade-up">Memuat dasbor...</p>;
     }
 
     const isAdminDashboard = dashboard?.role === 'admin';
@@ -56,7 +56,7 @@ const DashboardPage = () => {
             />
 
             {error ? (
-                <div className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                <div className="alert-error">
                     {error}
                 </div>
             ) : null}
@@ -90,9 +90,9 @@ const DashboardPage = () => {
             {dashboard?.recent_placements?.length ? (
                 <section className="mt-6">
                     <h3 className="mb-3 text-base font-semibold text-slate-900">Penempatan Terbaru</h3>
-                    <div className="overflow-x-auto rounded-lg border border-slate-200">
+                    <div className="table-shell fade-up">
                         <table className="min-w-full divide-y divide-slate-200 text-sm">
-                            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+                            <thead className="table-head">
                                 <tr>
                                     <th className="px-3 py-2">Siswa</th>
                                     <th className="px-3 py-2">Industri</th>
@@ -102,7 +102,7 @@ const DashboardPage = () => {
                             </thead>
                             <tbody className="divide-y divide-slate-100">
                                 {dashboard.recent_placements.map((item) => (
-                                    <tr key={item.id}>
+                                    <tr key={item.id} className="table-row">
                                         <td className="px-3 py-2 text-slate-700">{item.student_name}</td>
                                         <td className="px-3 py-2 text-slate-700">{item.industry_name}</td>
                                         <td className="px-3 py-2 text-slate-700">
@@ -122,7 +122,7 @@ const DashboardPage = () => {
                     <h3 className="mb-3 text-base font-semibold text-slate-900">Jurnal Terbaru</h3>
                     <div className="space-y-3">
                         {dashboard.recent_journals.map((journal) => (
-                            <article key={journal.id} className="rounded-lg border border-slate-200 p-3">
+                            <article key={journal.id} className="surface-card p-3 fade-up hover-glow">
                                 <p className="text-xs uppercase tracking-wide text-slate-500">{journal.date}</p>
                                 <p className="mt-1 text-sm text-slate-800">{journal.activity}</p>
                                 <p className="mt-1 text-xs text-slate-600">
@@ -137,9 +137,9 @@ const DashboardPage = () => {
             {dashboard?.recent_students?.length ? (
                 <section className="mt-6">
                     <h3 className="mb-3 text-base font-semibold text-slate-900">Siswa Ditugaskan Terbaru</h3>
-                    <div className="overflow-x-auto rounded-lg border border-slate-200">
+                    <div className="table-shell fade-up">
                         <table className="min-w-full divide-y divide-slate-200 text-sm">
-                            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+                            <thead className="table-head">
                                 <tr>
                                     <th className="px-3 py-2">Siswa</th>
                                     <th className="px-3 py-2">Status</th>
@@ -149,7 +149,7 @@ const DashboardPage = () => {
                             </thead>
                             <tbody className="divide-y divide-slate-100">
                                 {dashboard.recent_students.map((item) => (
-                                    <tr key={item.id}>
+                                    <tr key={item.id} className="table-row">
                                         <td className="px-3 py-2 text-slate-700">{item.student_name}</td>
                                         <td className="px-3 py-2 text-slate-700">
                                             {formatPlacementStatus(item.status)}

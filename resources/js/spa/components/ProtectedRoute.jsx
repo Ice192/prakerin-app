@@ -7,8 +7,8 @@ const ProtectedRoute = ({ roles, children }) => {
 
     if (auth.loading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-slate-100">
-                <div className="rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm text-slate-600 shadow-sm">
+            <div className="app-shell flex min-h-screen items-center justify-center">
+                <div className="surface-card px-5 py-3 text-sm text-slate-600 fade-up">
                     Memuat sesi...
                 </div>
             </div>

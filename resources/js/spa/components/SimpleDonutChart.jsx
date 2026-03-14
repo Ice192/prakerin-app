@@ -42,9 +42,9 @@ const SimpleDonutChart = ({ data }) => {
     }
 
     return (
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center fade-up">
             <div
-                className="relative h-36 w-36 rounded-full"
+                className="relative h-36 w-36 rounded-full transition-transform duration-300 hover:scale-[1.02]"
                 style={{ background: chartBackground }}
                 aria-label="Grafik ringkasan jurnal"
             >

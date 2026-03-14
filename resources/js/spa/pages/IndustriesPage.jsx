@@ -100,22 +100,22 @@ const IndustriesPage = () => {
             />
 
             {error ? (
-                <div className="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                <div className="alert-error">
                     {error}
                 </div>
             ) : null}
 
             {message ? (
-                <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                <div className="alert-success">
                     {message}
                 </div>
             ) : null}
 
-            <form className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 p-4 md:grid-cols-2" onSubmit={handleSubmit}>
+            <form className="form-card md:grid-cols-2 fade-up" onSubmit={handleSubmit}>
                 <input
                     type="text"
                     placeholder="Nama Industri"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.name}
                     onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
                     required
@@ -123,7 +123,7 @@ const IndustriesPage = () => {
                 <input
                     type="email"
                     placeholder="Email"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.email}
                     onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
                     required
@@ -131,7 +131,7 @@ const IndustriesPage = () => {
                 <input
                     type="text"
                     placeholder="Narahubung"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.contact_person}
                     onChange={(event) =>
                         setForm((prev) => ({ ...prev, contact_person: event.target.value }))
@@ -141,7 +141,7 @@ const IndustriesPage = () => {
                 <input
                     type="text"
                     placeholder="Alamat"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.address}
                     onChange={(event) => setForm((prev) => ({ ...prev, address: event.target.value }))}
                     required
@@ -151,7 +151,7 @@ const IndustriesPage = () => {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+                        className="btn-primary"
                     >
                         {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Industri' : 'Tambah Industri'}
                     </button>
@@ -159,7 +159,7 @@ const IndustriesPage = () => {
                         <button
                             type="button"
                             onClick={resetForm}
-                            className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                            className="btn-secondary"
                         >
                             Batal Edit
                         </button>
@@ -167,9 +167,9 @@ const IndustriesPage = () => {
                 </div>
             </form>
 
-            <div className="mt-5 overflow-x-auto rounded-xl border border-slate-200">
+            <div className="table-shell fade-up">
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
-                    <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                    <thead className="table-head">
                         <tr>
                             <th className="px-3 py-2">Nama</th>
                             <th className="px-3 py-2">Kontak</th>
@@ -193,7 +193,7 @@ const IndustriesPage = () => {
                             </tr>
                         ) : (
                             industries.map((industry) => (
-                                <tr key={industry.id}>
+                                <tr key={industry.id} className="table-row">
                                     <td className="px-3 py-2 text-slate-700">{industry.name}</td>
                                     <td className="px-3 py-2 text-slate-700">{industry.contact_person}</td>
                                     <td className="px-3 py-2 text-slate-700">{industry.email}</td>
@@ -203,14 +203,14 @@ const IndustriesPage = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => startEdit(industry)}
-                                                className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
+                                                className="btn-secondary btn-xs"
                                             >
                                                 Ubah
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => handleDelete(industry.id)}
-                                                className="rounded border border-rose-300 px-2 py-1 text-xs text-rose-700 hover:bg-rose-50"
+                                                className="btn-danger btn-xs"
                                             >
                                                 Hapus
                                             </button>

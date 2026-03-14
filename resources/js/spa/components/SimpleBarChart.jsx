@@ -22,7 +22,7 @@ const SimpleBarChart = ({ data }) => {
     }
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-3 fade-up">
             {normalized.map((item, index) => (
                 <div key={item.label} className="space-y-1">
                     <div className="flex items-center justify-between text-xs text-slate-600">
@@ -31,7 +31,7 @@ const SimpleBarChart = ({ data }) => {
                     </div>
                     <div className="h-2.5 rounded-full bg-slate-100">
                         <div
-                            className="h-2.5 rounded-full"
+                            className="h-2.5 rounded-full transition-all duration-500"
                             style={{
                                 width: `${Math.max((item.value / maxValue) * 100, 0)}%`,
                                 backgroundColor: BAR_COLORS[index % BAR_COLORS.length],

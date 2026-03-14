@@ -16,7 +16,7 @@ const LoginRoute = () => {
 
     if (loading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-slate-100 text-sm text-slate-600">
+            <div className="app-shell flex min-h-screen items-center justify-center text-sm text-slate-600">
                 Memuat sesi...
             </div>
         );

@@ -109,22 +109,22 @@ const StudentsPage = () => {
             />
 
             {error ? (
-                <div className="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                <div className="alert-error">
                     {error}
                 </div>
             ) : null}
 
             {message ? (
-                <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                <div className="alert-success">
                     {message}
                 </div>
             ) : null}
 
-            <form className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 p-4 md:grid-cols-2" onSubmit={handleSubmit}>
+            <form className="form-card md:grid-cols-2 fade-up" onSubmit={handleSubmit}>
                 <input
                     type="text"
                     placeholder="Nama Lengkap"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.name}
                     onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
                     required
@@ -132,7 +132,7 @@ const StudentsPage = () => {
                 <input
                     type="email"
                     placeholder="Email"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.email}
                     onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
                     required
@@ -140,7 +140,7 @@ const StudentsPage = () => {
                 <input
                     type="password"
                     placeholder={editingId ? 'Kata Sandi (opsional)' : 'Kata Sandi'}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.password}
                     onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
                     required={!editingId}
@@ -148,7 +148,7 @@ const StudentsPage = () => {
                 <input
                     type="text"
                     placeholder="NIS"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.nis}
                     onChange={(event) => setForm((prev) => ({ ...prev, nis: event.target.value }))}
                     required
@@ -156,7 +156,7 @@ const StudentsPage = () => {
                 <input
                     type="text"
                     placeholder="Kelas"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.class}
                     onChange={(event) => setForm((prev) => ({ ...prev, class: event.target.value }))}
                     required
@@ -164,7 +164,7 @@ const StudentsPage = () => {
                 <input
                     type="text"
                     placeholder="Jurusan"
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="form-control"
                     value={form.major}
                     onChange={(event) => setForm((prev) => ({ ...prev, major: event.target.value }))}
                     required
@@ -174,7 +174,7 @@ const StudentsPage = () => {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+                        className="btn-primary"
                     >
                         {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Siswa' : 'Tambah Siswa'}
                     </button>
@@ -182,7 +182,7 @@ const StudentsPage = () => {
                         <button
                             type="button"
                             onClick={resetForm}
-                            className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                            className="btn-secondary"
                         >
                             Batal Edit
                         </button>
@@ -190,9 +190,9 @@ const StudentsPage = () => {
                 </div>
             </form>
 
-            <div className="mt-5 overflow-x-auto rounded-xl border border-slate-200">
+            <div className="table-shell fade-up">
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
-                    <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                    <thead className="table-head">
                         <tr>
                             <th className="px-3 py-2">Nama</th>
                             <th className="px-3 py-2">Email</th>
@@ -217,7 +217,7 @@ const StudentsPage = () => {
                             </tr>
                         ) : (
                             students.map((student) => (
-                                <tr key={student.id}>
+                                <tr key={student.id} className="table-row">
                                     <td className="px-3 py-2 text-slate-700">{student.name}</td>
                                     <td className="px-3 py-2 text-slate-700">{student.email}</td>
                                     <td className="px-3 py-2 text-slate-700">{student.nis}</td>
@@ -228,14 +228,14 @@ const StudentsPage = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => startEdit(student)}
-                                                className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
+                                                className="btn-secondary btn-xs"
                                             >
                                                 Ubah
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => handleDelete(student.id)}
-                                                className="rounded border border-rose-300 px-2 py-1 text-xs text-rose-700 hover:bg-rose-50"
+                                                className="btn-danger btn-xs"
                                             >
                                                 Hapus
                                             </button>

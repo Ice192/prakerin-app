@@ -103,22 +103,22 @@ const JournalsPage = () => {
             />
 
             {error ? (
-                <div className="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                <div className="alert-error">
                     {error}
                 </div>
             ) : null}
 
             {message ? (
-                <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                <div className="alert-success">
                     {message}
                 </div>
             ) : null}
 
             {canEditJournal ? (
-                <form className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 p-4" onSubmit={handleSubmit}>
+                <form className="form-card fade-up" onSubmit={handleSubmit}>
                     <input
                         type="date"
-                        className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                        className="form-control"
                         value={form.date}
                         onChange={(event) => setForm((prev) => ({ ...prev, date: event.target.value }))}
                         required
@@ -126,7 +126,7 @@ const JournalsPage = () => {
                     <textarea
                         rows={4}
                         placeholder="Tuliskan aktivitas prakerin Anda..."
-                        className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                        className="form-control"
                         value={form.activity}
                         onChange={(event) => setForm((prev) => ({ ...prev, activity: event.target.value }))}
                         required
@@ -135,15 +135,15 @@ const JournalsPage = () => {
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
-                    >
+                            className="btn-primary"
+                        >
                             {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Jurnal' : 'Tambah Jurnal'}
                         </button>
                         {editingId ? (
                             <button
                                 type="button"
                                 onClick={resetForm}
-                                className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                                className="btn-secondary"
                             >
                                 Batal Edit
                             </button>
@@ -151,14 +151,14 @@ const JournalsPage = () => {
                     </div>
                 </form>
             ) : (
-                <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
+                <div className="alert-warning">
                     Akun ini hanya dapat melihat jurnal. Fitur tambah dan ubah jurnal hanya untuk akun siswa.
                 </div>
             )}
 
-            <div className="mt-5 overflow-x-auto rounded-xl border border-slate-200">
+            <div className="table-shell fade-up">
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
-                    <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                    <thead className="table-head">
                         <tr>
                             <th className="px-3 py-2">Tanggal</th>
                             <th className="px-3 py-2">Siswa</th>
@@ -182,7 +182,7 @@ const JournalsPage = () => {
                             </tr>
                         ) : (
                             journals.map((journal) => (
-                                <tr key={journal.id}>
+                                <tr key={journal.id} className="table-row">
                                     <td className="px-3 py-2 text-slate-700">{journal.date}</td>
                                     <td className="px-3 py-2 text-slate-700">{journal.student_name}</td>
                                     <td className="px-3 py-2 text-slate-700">{journal.activity}</td>
@@ -195,7 +195,7 @@ const JournalsPage = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => startEdit(journal)}
-                                                    className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
+                                                    className="btn-secondary btn-xs"
                                                 >
                                                     Ubah
                                                 </button>
@@ -206,14 +206,14 @@ const JournalsPage = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => verifyJournal(journal.id, 'verified')}
-                                                        className="rounded border border-emerald-300 px-2 py-1 text-xs text-emerald-700 hover:bg-emerald-50"
+                                                        className="btn-success btn-xs"
                                                     >
                                                         Verifikasi
                                                     </button>
                                                     <button
                                                         type="button"
                                                         onClick={() => verifyJournal(journal.id, 'rejected')}
-                                                        className="rounded border border-rose-300 px-2 py-1 text-xs text-rose-700 hover:bg-rose-50"
+                                                        className="btn-danger btn-xs"
                                                     >
                                                         Tolak
                                                     </button>
